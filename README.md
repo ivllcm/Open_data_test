@@ -39,9 +39,11 @@ quieter:
 
 ![Five SNR levels down, four processing stages across: the input mixture, an audio-only network, the measured audio-visual output, and the clean target](docs/preview.png)
 
-To hear any of this, open `docs/index.html` in a browser — the same grid, with
-the audio behind every panel and the lip video in sync. The figures above are
-stills of that page, for readers who only have the rendered README.
+**To hear any of this**, open the live page:
+### → https://ivllcm.github.io/Open_data_test/
+
+The same grid, with the audio behind every panel and the lip video in sync. The
+figures above are stills of it, for readers who only have the rendered README.
 
 ## Worked examples
 
