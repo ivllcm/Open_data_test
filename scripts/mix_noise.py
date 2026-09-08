@@ -346,7 +346,7 @@ def main():
     ap.add_argument("--out-dir", nargs="+", required=True,
                     help="one output directory per list; each receives clean/ and noisy/")
     ap.add_argument("--seed", type=int, default=SEED,
-                    help="the draws are seeded with this; %(default)s is what the corpus used")
+                    help="the draws are seeded with this")
     ap.add_argument("--noise-noisy", default=None, help="overrides NOISE_NOISY_DIR")
     ap.add_argument("--noise-clean", default=None, help="overrides NOISE_CLEAN_DIR")
     args = ap.parse_args()

@@ -19,7 +19,7 @@ from collections import defaultdict
 
 def split_audio_files(audio_dir="./audio", dev_list_file="dev.list",
                       train_list_file="train.list", path_prefix="./audio",
-                      exclude=(), seed=42, exclude_first=False):
+                      exclude=(), seed=1111, exclude_first=False):
     """
     Split audio files into train and dev sets.
     For each speaker (s2-s55) and each type (l_ or p_), 
@@ -125,7 +125,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--audio-dir", required=True, help="the corpus audio directory")
     ap.add_argument("--out-dir", required=True, help="where dev.list and train.list go")
-    ap.add_argument("--seed", type=int, default=42,
+    ap.add_argument("--seed", type=int, default=1111,
                     help="the draw is seeded with this")
     ap.add_argument("--exclude", default=None,
                     help="file of utterance paths to drop")

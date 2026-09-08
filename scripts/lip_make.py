@@ -1,6 +1,6 @@
 """Crop the frontal videos down to the target talker's lip region.
 
-A fixed 180x180 window at the centre of each 720x480 frame, nudged per talker
+A fixed 180x180 window at the center of each 720x480 frame, nudged per talker
 by a hand-tuned offset, resized to 64x64 and written at 25 fps. No face tracker
 is involved, so the crop stays put for the whole utterance -- the talkers are
 seated and filmed head-on.

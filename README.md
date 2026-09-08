@@ -5,10 +5,10 @@ video of a talker's face alongside the audio. This repository shows how to
 build a dataset for it — clean speech, video of the talker speaking it, and two
 kinds of interference mixed in.
 
-| | source | licence |
+| | source | license |
 | --- | --- | --- |
 | Clean speech and video | [Lombard GRID](https://spandh.dcs.shef.ac.uk/avlombard/) | CC BY 4.0 |
-| Speech noise | other utterances of Lombard GRID | CC BY 4.0 |
+| Speech noise | other utterances from Lombard GRID | CC BY 4.0 |
 | Non-speech noise | [CHiME2](https://catalog.ldc.upenn.edu/LDC2017S10) | LDC user agreement |
 
 **What is here, and what is not.** Anything derived from Lombard GRID can be
@@ -16,37 +16,41 @@ redistributed, so the speech-noise examples are included. CHiME2 cannot be: its
 agreement allows non-commercial research use but no redistribution outside the
 licensee's own research group, and that extends to anything derived from it. So
 the non-speech mixtures are absent — but the code that builds them is here
-unchanged, and anyone holding the CHiME2 licence can produce that half.
+unchanged, and anyone holding the CHiME2 license can produce that half.
 
 ## Listening demo and AVSE results
 
-![The lip video playing beside four spectrograms of the same 0 dB mixture: the mixture itself, an audio-only network's output, an audio-visual network's output, and the clean target](docs/demo.gif)
+![The lip video playing beside four spectrograms of the same 0 dB mixture: the mixture itself, an audio-only network's output, the measured audio-visual output, and the clean target](docs/demo.gif)
 
-Left to right: the lip video the network reads, the mixture, what an audio-only
-network recovers from it, what the same mixture becomes with the video
-attached — the interfering talker's harmonics thin out and the target's come
-through — and the clean recording underneath it all.
+Beside the lip video, the four panels are:
+
+| panel | what it holds |
+| --- | --- |
+| Input (Mixture) | the target talker and the interfering talker together |
+| Audio only | what a network trained without video recovers from that mixture |
+| Audio + Visual (Measured) | what the same mixture becomes when the network can also watch the target talker's mouth |
+| Clean target | the recording before anything was mixed into it |
+
+In the Audio + Visual panel the interfering talker's harmonics thin out while
+the target's harmonics come through clearly.
 
 All five levels, from the interferer 10 dB louder than the target to 10 dB
 quieter:
 
-![Five SNR levels down, four processing stages across: the input mixture, an audio-only network, AVSEP, and the clean target](docs/preview.png)
+![Five SNR levels down, four processing stages across: the input mixture, an audio-only network, the measured audio-visual output, and the clean target](docs/preview.png)
 
-**To hear any of this**, open the live page:
-
-### → https://ivllcm.github.io/Open_data_test/
-
-The same grid, with the audio behind every panel and the lip video in sync. The
-figures above are stills of it, for readers who only have the rendered README.
+To hear any of this, open `docs/index.html` in a browser — the same grid, with
+the audio behind every panel and the lip video in sync. The figures above are
+stills of that page, for readers who only have the rendered README.
 
 ## Worked examples
 
-`examples/` holds three of them. Each is one target talker, one interfering
+`examples/` holds three examples. Each is one target talker, one interfering
 talker, and the same pair mixed at all five SNRs:
 
 ```
 examples/example-1/
-  target_s41_l_pwaf9s.wav        the talker to be recovered
+  target_s41_l_pwaf9s.wav        the speech to be enhanced
   target_lip.mp4                 that talker's mouth, 64 x 64 at 25 fps
   interferer_s54_l_lwwo5s.wav    a different talker, after the time shift
   mixture_m10dB.wav              target + interferer at -10 dB
@@ -72,7 +76,7 @@ from the same 540 utterances, which are held out of training — so they share
 their clean speech but carry different interference.
 
 **Lip movement crop.** `lip_make.py` takes a fixed 180 × 180 window at the
-centre of each 720 × 480 frontal video, offset per talker, and writes it as a
+center of each 720 × 480 frontal video, offset per talker, and writes it as a
 64 × 64 MP4 at 25 fps.
 
 **How a mixture is made.** For a target utterance and a chosen SNR:
@@ -81,7 +85,7 @@ centre of each 720 × 480 frontal video, offset per talker, and writes it as a
    uniformly at random.
 2. **Shift it in time.** One of six operations at random: pad or trim its head
    by 4,000 / 8,000 / 16,000 samples (0.25 / 0.5 / 1.0 s). Then trim or
-   zero-pad it to the target's length.
+   zero-pad it to the target audio's length.
 3. **Scale it to the SNR.**
 
    ```
@@ -92,9 +96,7 @@ centre of each 720 × 480 frontal video, offset per talker, and writes it as a
 
 The interferer is drawn inside the SNR loop, so an utterance's five stored
 mixtures each carry a different interfering talker — they are five samples, not
-one scene at five levels. Results are reported per interference condition
-rather than per SNR, and every system is evaluated on identical files, so this
-affects neither what is compared nor how.
+one scene at five levels. 
 
 ## Dataset size
 
@@ -165,8 +167,12 @@ python scripts/lip_make.py --front-dir $CORPUS/front --out-dir out/lip --limit 1
 
 Takes a list and mixes it at −10, −5, 0, +5 and +10 dB. Even-numbered
 utterances in the list are mixed with non-speech noise, odd-numbered ones with
-another utterance from the Lombard GRID corpus. The noise dataset has to be
-present for either condition.
+another utterance from the Lombard GRID corpus.
+
+> **Note.** A noise dataset is required for both conditions, not only 
+> the non-speech one: the noise file drawn for an utterance supplies 
+> the pairing id that appears in every output filename.
+> Any suitable public noise dataset can stand in for CHiME2 here.
 
 | argument | |
 | --- | --- |
@@ -183,7 +189,7 @@ python scripts/mix_noise.py \
     --lists out/lists/train.list out/lists/dev.list out/lists/dev.list \
     --audio-root $CORPUS \
     --out-dir out/train out/dev out/test \
-    --seed 42 \
+    --seed 1111 \
     --noise-noisy $NOISE/noisy --noise-clean $NOISE/clean
 ```
 
@@ -208,7 +214,7 @@ draws for the lines that remain.
 │   ├── split.py       corpus → train and dev/test utterance lists
 │   ├── lip_make.py    frontal video → 64 x 64 lip video
 │   ├── mix_noise.py   utterance lists → mixtures
-│   └── excluded.txt   utterances dropped from the corpus, with the reason
+│   └── excluded.txt   utterances dropped from the corpus, with the reason for each
 ├── docs/
 │   ├── index.html     the listening demo
 │   ├── media/         its audio, video and spectrograms
@@ -223,7 +229,7 @@ Utterances run 1.4–4.1 s, mean 2.5 s.
 
 Dependencies: `numpy`, `soundfile`, `librosa`, `opencv-python`, `tqdm`.
 
-## Provenance and licence
+## Provenance and license
 
 Speech, video and talker metadata come from the **Lombard GRID** corpus,
 released under **Creative Commons Attribution 4.0 International**:

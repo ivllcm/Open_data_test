@@ -1,4 +1,4 @@
-# Utterances dropped from train.list after the split was drawn.
+# Utterances dropped from the corpus.
 # Lines beginning with '#' are comments; the entries themselves may contain '#'.
 #
 # Unreadable video -- the .mov has no moov atom, opens to zero frames, and
