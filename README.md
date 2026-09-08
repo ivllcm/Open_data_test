@@ -33,10 +33,7 @@ quieter:
 ![Five SNR levels down, four processing stages across: the input mixture, an audio-only network, AVSEP, and the clean target](docs/preview.png)
 
 **To hear any of this**, open `docs/index.html` in a browser — the same grid,
-with the audio behind every panel and the lip video in sync. It needs
-JavaScript for the video control and reads its media from `docs/media/`
-alongside it, so it works served from a repository host or from a local copy of
-this directory. The figures above are stills of that page, for readers who only
+with the audio behind every panel and the lip video in sync. The figures above are stills of that page, for readers who only
 have the rendered README.
 
 ## Worked examples
